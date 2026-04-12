@@ -1078,6 +1078,12 @@ body {
 </div>
 
 <script>
+// ── Ao recarregar, volta ao topo e limpa o hash da URL ────────
+if (window.location.hash) {
+  history.replaceState(null, '', window.location.pathname);
+  window.scrollTo(0, 0);
+}
+
 // ── UX helpers ────────────────────────────────────────────────
 function initReveal() {
   const obs = new IntersectionObserver(entries => {
