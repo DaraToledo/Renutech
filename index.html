@@ -860,7 +860,7 @@ body {
       <div class="form-group"><label>Serviço de interesse *</label><select id="f-servico"></select></div>
       <div class="form-group"><label>Endereço da vistoria</label><input type="text" id="f-endereco" placeholder="Rua, número, bairro, cidade"></div>
       <div class="form-group"><label>Observações</label><textarea id="f-obs" placeholder="Conte um pouco sobre o seu projeto..."></textarea></div>
-      <div class="validation-msg" id="validation-msg">Por favor, preencha os campos obrigatórios: nome, telefone, tipo de imóvel e serviço.</div>
+      <div class="validation-msg" id="validation-msg">Por favor, preencha os campos obrigatórios: nome, telefone, tipo de imóvel, serviço e endereço.</div>
     </div>
     <div class="calendar-col">
       <div class="calendar-mini">
@@ -1424,7 +1424,7 @@ function abrirWhatsApp(){
   const endereco=document.getElementById('f-endereco').value.trim();
   const obs=document.getElementById('f-obs').value.trim();
   const msg=document.getElementById('validation-msg');
-  if(!nome||!tel||!imovel||!servico){ msg.classList.add('show'); document.getElementById('f-nome').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if(!nome||!tel||!imovel||!servico||!endereco){ msg.classList.add('show'); document.getElementById('f-nome').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   msg.classList.remove('show');
   let dataHora='';
   if(diaSelecionado&&horarioSelecionado){
@@ -1433,7 +1433,7 @@ function abrirWhatsApp(){
     dataHora='\n📅 *Data preferida:* '+diaSelecionado.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+' (horário a confirmar)';
   }
   const wpp = (siteData.whatsapp || DEFAULT_DATA.whatsapp);
-  const mensagem=`Ol\u00e1, BRN Automa\u00e7\u00e3o! \ud83d\udc4b\n\nAcabo de realizar um agendamento de vistoria t\u00e9cnica pelo site e gostaria de confirmar o recebimento por aqui.\n\n\ud83d\udc64 *Nome:* ${nome}\n\ud83d\udcde *Telefone:* ${tel}${email?'\n\u2709\ufe0f *E-mail:* '+email:''}\n\ud83c\udfe0 *Tipo de im\u00f3vel:* ${imovel}${dataHora}\n\ud83d\udee1\ufe0f *Servi\u00e7o:* ${servico}${endereco?'\n\ud83d\udccd *Endere\u00e7o:* '+endereco:''}${obs?'\n\n\ud83d\udcac *Observa\u00e7\u00f5es:* '+obs:''}\n\nPor favor, me avisem se houver algum imprevisto. Desde j\u00e1, agrade\u00e7o!`;
+  const mensagem=`Ol\u00e1, BRN Automa\u00e7\u00e3o!\n\nAcabo de realizar um agendamento de vistoria t\u00e9cnica pelo site e gostaria de confirmar o recebimento por aqui.\n\n*Nome:* ${nome}\n*Telefone:* ${tel}${email?'\n*E-mail:* '+email:''}\n*Tipo de im\u00f3vel:* ${imovel}${dataHora}\n*Servi\u00e7o:* ${servico}\n*Endere\u00e7o:* ${endereco}${obs?'\n\n*Observa\u00e7\u00f5es:* '+obs:''}\n\nPor favor, me avisem se houver algum imprevisto. Desde j\u00e1, agrade\u00e7o!`;
   window.open('https://wa.me/'+wpp+'?text='+encodeURIComponent(mensagem),'_blank');
 }
 document.getElementById('f-tel').addEventListener('input',function(){
