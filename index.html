@@ -1433,7 +1433,7 @@ function abrirWhatsApp(){
     dataHora='\n📅 *Data preferida:* '+diaSelecionado.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+' (horário a confirmar)';
   }
   const wpp = (siteData.whatsapp || DEFAULT_DATA.whatsapp);
-  const mensagem=`Olá, BRN Automação! 👋\n\nGostaria de agendar uma *vistoria*. Seguem meus dados:\n\n👤 *Nome:* ${nome}\n📱 *Telefone:* ${tel}${email?'\n✉️ *E-mail:* '+email:''}\n🏠 *Tipo de imóvel:* ${imovel}\n🔧 *Serviço de interesse:* ${servico}${endereco?'\n📍 *Endereço:* '+endereco:''}${dataHora}${obs?'\n\n💬 *Observações:* '+obs:''}\n\nAguardo o contato. Obrigado!`;
+  const mensagem=`Olá, BRN Automação! 👋\n\nAcabo de realizar um agendamento de vistoria técnica pelo site e gostaria de confirmar o recebimento por aqui.\n\n👤 *Nome:* ${nome}\n📞 *Telefone:* ${tel}${email?'\n✉️ *E-mail:* '+email:''}\n🏠 *Tipo de imóvel:* ${imovel}${dataHora}\n🛡️ *Serviço:* ${servico}${endereco?'\n📍 *Endereço:* '+endereco:''}${obs?'\n\n💬 *Observações:* '+obs:''}\n\nPor favor, me avisem se houver algum imprevisto. Desde já, agradeço!`;
   window.open('https://wa.me/'+wpp+'?text='+encodeURIComponent(mensagem),'_blank');
 }
 document.getElementById('f-tel').addEventListener('input',function(){
