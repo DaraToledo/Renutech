@@ -1659,7 +1659,7 @@ function makeDepRow(r,i){
       ${[5,4,3].map(n=>`<option value="${n}" ${(r.stars||5)==n?'selected':''}>${'★'.repeat(n)}</option>`).join('')}
     </select>
     <button class="del-btn" onclick="removeDepoimento(${i})">✕</button></div>
-  <input type="text" value="${r.text}" placeholder="Depoimento do cliente" id="dt-${i}" style="margin-top:6px;width:100%;border:1px solid #cfe0f0;border-radius:6px;padding:6px 8px;font-size:12px;background:#f7fafd;font-family:inherit;outline:none">`;
+  <input type="text" value="${r.text}" placeholder="Depoimento do cliente" id="dep-txt-${i}" style="margin-top:6px;width:100%;border:1px solid #cfe0f0;border-radius:6px;padding:6px 8px;font-size:12px;background:#f7fafd;font-family:inherit;outline:none">`;
   return row;
 }
 function addDepoimento(){
@@ -1674,7 +1674,7 @@ function removeDepoimento(i){
     row.id='drow-'+idx;
     row.querySelector('input[type=text]').id='dn-'+idx;
     const star=row.querySelector('select'); if(star) star.id='dstar-'+idx;
-    const txt=row.querySelectorAll('input[type=text]')[1]; if(txt) txt.id='dt-'+idx;
+    const txt=row.querySelectorAll('input[type=text]')[1]; if(txt) txt.id='dep-txt-'+idx;
     row.querySelector('.del-btn').setAttribute('onclick','removeDepoimento('+idx+')');
   });
 }
@@ -1751,7 +1751,7 @@ function adminSave(section){
     d.depoimentos=[];
     document.querySelectorAll('#depoimentosList .editable-row').forEach((row,i)=>{
       const name=document.getElementById('dn-'+i)?.value||'';
-      const text=document.getElementById('dt-'+i)?.value||'';
+      const text=document.getElementById('dep-txt-'+i)?.value||'';
       const stars=parseInt(document.getElementById('dstar-'+i)?.value||5);
       if(name.trim()||text.trim()) d.depoimentos.push({name,text,stars});
     });
