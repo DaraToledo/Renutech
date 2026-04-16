@@ -1099,6 +1099,9 @@ const BIN_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
 const ADMIN_PWD_KEY = 'brn_admin_pwd';
 const DEFAULT_PWD   = 'brn2024';
 const DIAS_NOMES = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+// ── Supabase Storage ──────────────────────────────────────────
+const BIN_URL_SUPA    = 'https://gxevkmmhyhzgktsmzmkn.supabase.co';
+const SUPA_KEY_STORAGE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4ZXZrbW1oeWh6Z2t0c216bWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzODA1OTUsImV4cCI6MjA5MTk1NjU5NX0.iggwIOzgVv4jJ7mI8qbCmG848acY5y4sfO205pfNHKI';
 
 // ── Dados padrão ──────────────────────────────────────────────
 const DEFAULT_DATA = {
@@ -1692,27 +1695,58 @@ function adminRenderPhotos(){
     grid.appendChild(item);
   });
 }
+// ── Supabase Storage helpers ──────────────────────────────────
+async function supaStorageUpload(file, pasta) {
+  const ext      = file.name.split('.').pop();
+  const fileName = `${pasta}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  const url      = `${BIN_URL_SUPA}/storage/v1/object/imagens/${fileName}`;
+  const res = await fetch(url, {
+    method : 'POST',
+    headers: {
+      'apikey'       : SUPA_KEY_STORAGE,
+      'Authorization': 'Bearer ' + SUPA_KEY_STORAGE,
+      'Content-Type' : file.type,
+      'x-upsert'     : 'true'
+    },
+    body: file
+  });
+  if (!res.ok) { const e = await res.text(); throw new Error(e); }
+  return `${BIN_URL_SUPA}/storage/v1/object/public/imagens/${fileName}`;
+}
+async function supaStorageDelete(publicUrl) {
+  if (!publicUrl || !publicUrl.includes('/object/public/imagens/')) return;
+  const path = publicUrl.split('/object/public/imagens/')[1];
+  if (!path) return;
+  await fetch(`${BIN_URL_SUPA}/storage/v1/object/imagens/${path}`, {
+    method : 'DELETE',
+    headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+  });
+}
+
 function adminDelPhoto(i){
+  const foto = siteData.fotos[i];
+  if (foto && foto.src && foto.src.startsWith('http')) supaStorageDelete(foto.src).catch(()=>{});
   siteData.fotos.splice(i,1);
   adminRenderPhotos();
 }
 function adminUpdCaption(i,v){
   if(siteData.fotos[i]) siteData.fotos[i].caption=v;
 }
-function adminUploadPhotos(input){
+async function adminUploadPhotos(input){
   const files=Array.from(input.files);
-  let loaded=0;
   if(!siteData.fotos) siteData.fotos=[];
-  files.forEach(file=>{
-    if(file.size>2*1024*1024){ alert(file.name+' excede 2MB'); loaded++; return; }
-    const reader=new FileReader();
-    reader.onload=e=>{
-      siteData.fotos.push({src:e.target.result,caption:''});
-      if(++loaded===files.length) adminRenderPhotos();
-    };
-    reader.readAsDataURL(file);
-  });
+  const btn=document.querySelector('#tab-fotos .admin-btn');
+  if(btn){ btn.disabled=true; btn.textContent='⏳ Enviando…'; }
+  for(const file of files){
+    if(file.size>10*1024*1024){ alert(file.name+' excede 10MB'); continue; }
+    try{
+      const url = await supaStorageUpload(file,'galeria');
+      siteData.fotos.push({src:url,caption:''});
+    }catch(e){ alert('Erro ao enviar '+file.name+': '+e.message); }
+  }
   input.value='';
+  adminRenderPhotos();
+  if(btn){ btn.disabled=false; btn.textContent='💾 Salvar galeria'; }
 }
 
 // ── Salvar seções ─────────────────────────────────────────────
@@ -1912,19 +1946,24 @@ function removeQsDif(i) {
 }
 
 let _pendingQsImg = null;
-function adminQsImgUpload(input) {
+async function adminQsImgUpload(input) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { alert('Arquivo excede 2MB'); return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    _pendingQsImg = e.target.result;
-    document.getElementById('qsImgPreview').src = _pendingQsImg;
+  if (file.size > 10 * 1024 * 1024) { alert('Arquivo excede 10MB'); return; }
+  const btn = document.querySelector('#tab-quemsomos .admin-btn');
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Enviando…'; }
+  try {
+    const url = await supaStorageUpload(file, 'quemsomos');
+    _pendingQsImg = url;
+    document.getElementById('qsImgPreview').src = url;
     document.getElementById('qsImgPreviewWrap').style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  } catch(e) { alert('Erro ao enviar foto: '+e.message); }
+  finally { if(btn){ btn.disabled=false; btn.textContent='💾 Salvar Quem Somos'; } }
+  input.value = '';
 }
 function adminQsImgRemove() {
+  const atual = _pendingQsImg || (siteData.quemsomos && siteData.quemsomos.foto);
+  if (atual && atual.startsWith('http')) supaStorageDelete(atual).catch(()=>{});
   _pendingQsImg = null;
   if (siteData.quemsomos) siteData.quemsomos.foto = null;
   document.getElementById('qsImgPreviewWrap').style.display = 'none';
@@ -1937,23 +1976,27 @@ function adminQsImgRemove() {
 
 let _pendingLogoData = null;
 
-function adminLogoUpload(input) {
+async function adminLogoUpload(input) {
   const file = input.files[0];
   if (!file) return;
-  if (file.size > 2 * 1024 * 1024) { alert('Arquivo excede 2MB'); return; }
-  const reader = new FileReader();
-  reader.onload = e => {
-    _pendingLogoData = e.target.result;
+  if (file.size > 10 * 1024 * 1024) { alert('Arquivo excede 10MB'); return; }
+  const btn = document.querySelector('#tab-logo .admin-btn');
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Enviando…'; }
+  try {
+    const url = await supaStorageUpload(file, 'logo');
+    _pendingLogoData = url;
     const prev = document.getElementById('logoUploadPreview');
     const img  = document.getElementById('logoNewImg');
-    img.src = _pendingLogoData;
+    img.src = url;
     prev.style.display = 'block';
-  };
-  reader.readAsDataURL(file);
+  } catch(e) { alert('Erro ao enviar logo: '+e.message); }
+  finally { if(btn){ btn.disabled=false; btn.textContent='💾 Salvar logo'; } }
+  input.value = '';
 }
 
 function adminLogoRemove() {
   if (!confirm('Remover logo personalizada e voltar ao logo original?')) return;
+  if (siteData.logo && siteData.logo.startsWith('http')) supaStorageDelete(siteData.logo).catch(()=>{});
   _pendingLogoData = null;
   siteData.logo = null;
   document.getElementById('logoUploadPreview').style.display = 'none';
