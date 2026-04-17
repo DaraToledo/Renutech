@@ -1666,18 +1666,24 @@ function removeServico(i){
     row.querySelector('.del-btn').setAttribute('onclick','removeServico('+idx+')');
   });
 }
-function servicoImgUpload(i, input){
+async function servicoImgUpload(i, input){
   const file=input.files[0];
   if(!file) return;
-  if(file.size>2*1024*1024){ alert(file.name+' excede 2MB'); return; }
-  const reader=new FileReader();
-  reader.onload=e=>{
-    document.getElementById('simgdata-'+i).value=e.target.result;
+  if(file.size>10*1024*1024){ alert(file.name+' excede 10MB'); return; }
+  const btn = document.querySelector('#tab-servicos .admin-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Enviando...'; }
+  try {
+    const url = await supaStorageUpload(file, 'servicos');
+    document.getElementById('simgdata-'+i).value = url;
     const prev=document.getElementById('simgprev-'+i);
-    if(prev) prev.innerHTML=`<img src="${e.target.result}" style="width:80px;height:50px;object-fit:cover;border-radius:6px">`;
-  };
-  reader.readAsDataURL(file);
+    if(prev) prev.innerHTML=`<img src="${url}" style="width:80px;height:50px;object-fit:cover;border-radius:6px">`;
+  } catch(e) {
+    alert('Erro ao enviar foto: '+e.message);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='Salvar serviços'; }
+  }
 }
+
 function clearServicoImg(i){
   document.getElementById('simgdata-'+i).value='';
   const prev=document.getElementById('simgprev-'+i);
@@ -1723,17 +1729,23 @@ function removeCase(i){
     row.querySelector('.del-btn').setAttribute('onclick','removeCase('+idx+')');
   });
 }
-function caseImgUpload(i, input){
+async function caseImgUpload(i, input){
   const file=input.files[0]; if(!file) return;
-  if(file.size>3*1024*1024){ alert('Imagem excede 3MB'); return; }
-  const reader=new FileReader();
-  reader.onload=e=>{
-    document.getElementById('cimgdata-'+i).value=e.target.result;
+  if(file.size>10*1024*1024){ alert('Imagem excede 10MB'); return; }
+  const btn = document.querySelector('#tab-cases .admin-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Enviando...'; }
+  try {
+    const url = await supaStorageUpload(file, 'cases');
+    document.getElementById('cimgdata-'+i).value = url;
     const prev=document.getElementById('cimgprev-'+i);
-    if(prev) prev.innerHTML=`<img src="${e.target.result}" style="width:80px;height:50px;object-fit:cover;border-radius:6px">`;
-  };
-  reader.readAsDataURL(file);
+    if(prev) prev.innerHTML=`<img src="${url}" style="width:80px;height:50px;object-fit:cover;border-radius:6px">`;
+  } catch(e) {
+    alert('Erro ao enviar foto: '+e.message);
+  } finally {
+    if(btn){ btn.disabled=false; btn.textContent='Salvar cases'; }
+  }
 }
+
 function clearCaseImg(i){
   document.getElementById('cimgdata-'+i).value='';
   const prev=document.getElementById('cimgprev-'+i);
