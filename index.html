@@ -1120,15 +1120,19 @@ function initActiveNav() {
 // ══════════════════════════════════════════════════════════════
 // CONFIGURAÇÃO
 // ══════════════════════════════════════════════════════════════
-const BIN_ID  = '69dbe6ed10716a4d5de5ae06';
-const API_KEY = '$2a$10$3mvJwhwHPjggwuWmE0stIO7361rgdgFRBrbQkLJ/gtPYvE39kUiua';
-const BIN_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
 const ADMIN_PWD_KEY = 'brn_admin_pwd';
 const DEFAULT_PWD   = 'brn2024';
 const DIAS_NOMES = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-// ── Supabase Storage ──────────────────────────────────────────
+// ── Supabase ──────────────────────────────────────────────────
 const BIN_URL_SUPA    = 'https://gxevkmmhyhzgktsmzmkn.supabase.co';
 const SUPA_KEY_STORAGE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4ZXZrbW1oeWh6Z2t0c216bWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzODA1OTUsImV4cCI6MjA5MTk1NjU5NX0.iggwIOzgVv4jJ7mI8qbCmG848acY5y4sfO205pfNHKI';
+const SUPA_DB_URL  = BIN_URL_SUPA + '/rest/v1/site_config';
+const SUPA_HEADERS = {
+  'apikey': SUPA_KEY_STORAGE,
+  'Authorization': 'Bearer ' + SUPA_KEY_STORAGE,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=minimal'
+};
 
 // ── Dados padrão ──────────────────────────────────────────────
 const DEFAULT_DATA = {
@@ -1183,36 +1187,43 @@ const DEFAULT_DATA = {
 let siteData = {};
 let HORARIOS = {};
 
-// ══ JSONBin ════════════════════════════════════════════════════
+// ══ Supabase Database ══════════════════════════════════════════
 async function binRead() {
-  // 1. Tenta JSONBin
+  // 1. Tenta Supabase Database
   try {
-    const r = await fetch(BIN_URL, {
-      headers: {'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false'}
+    const r = await fetch(SUPA_DB_URL + '?id=eq.1&select=data', {
+      headers: {
+        'apikey': SUPA_KEY_STORAGE,
+        'Authorization': 'Bearer ' + SUPA_KEY_STORAGE
+      }
     });
     if (!r.ok) throw new Error('read ' + r.status);
-    return await r.json();
-  } catch(e) {}
+    const rows = await r.json();
+    if (rows && rows.length > 0 && rows[0].data && Object.keys(rows[0].data).length > 0) {
+      return rows[0].data;
+    }
+  } catch(e) { console.warn('Supabase read error:', e); }
   // 2. Fallback: localStorage
   try {
     const local = localStorage.getItem('brn_sitedata');
     if (local) return JSON.parse(local);
   } catch(e) {}
-  // 3. Último recurso: defaults (nunca trava)
+  // 3. Último recurso: defaults
   return null;
 }
 async function binWrite(data) {
-  // Sempre salva no localStorage primeiro (fonte principal)
-  localStorage.setItem('brn_sitedata', JSON.stringify(data));
-  // Tenta sincronizar com JSONBin (opcional — falha silenciosa)
-  try {
-    const r = await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json','X-Master-Key': API_KEY},
-      body: JSON.stringify(data)
-    });
-    // ignora erros do JSONBin — localStorage já salvou
-  } catch(e) {}
+  // Salva no localStorage como cache local
+  try { localStorage.setItem('brn_sitedata', JSON.stringify(data)); } catch(e) {}
+  // Salva no Supabase Database (fonte principal)
+  const r = await fetch(SUPA_DB_URL + '?id=eq.1', {
+    method: 'PATCH',
+    headers: SUPA_HEADERS,
+    body: JSON.stringify({ data: data, updated_at: new Date().toISOString() })
+  });
+  if (!r.ok) {
+    const err = await r.text();
+    throw new Error('Supabase write error: ' + err);
+  }
   return true;
 }
 
@@ -1928,7 +1939,7 @@ function adminSave(section){
     if(typeof updateContatoSection === "function") updateContatoSection(d);
   }
 
-  // Salva no JSONBin
+  // Salva no Supabase
   binWrite(d).then(()=>{
     document.getElementById('saveBanner').classList.add('show');
     document.getElementById('saveErr').classList.remove('show');
