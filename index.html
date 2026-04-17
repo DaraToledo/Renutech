@@ -125,7 +125,7 @@ body {
 .hero {
   background: linear-gradient(150deg, rgba(7,29,54,0.0) 0%, rgba(7,29,54,0.0) 60%, rgba(7,29,54,0.72) 85%, rgba(7,29,54,0.88) 100%), url('https://gxevkmmhyhzgktsmzmkn.supabase.co/storage/v1/object/public/imagens/hero-bg.png');
   background-size: cover;
-  background-position: center center;
+  background-position: center top;
   background-repeat: no-repeat;
   padding: 0;
   display: flex;
@@ -150,16 +150,16 @@ body {
 
 @media(max-width:768px) {
   .hero {
-    min-height: 60vh;
-    padding: 4rem 1.25rem;
-    background-position: center center;
+    min-height: calc(100vw * 0.6);
+    background-position: center top;
     background-size: cover;
+    padding-bottom: 2rem;
   }
 }
 @media(max-width:480px) {
   .hero {
-    min-height: 65vh;
-    background-position: center center;
+    min-height: calc(100vw * 0.7);
+    background-position: center top;
   }
 }
 .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #4dd47a; animation: blink 2s ease infinite; }
