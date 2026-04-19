@@ -353,6 +353,107 @@ body {
 .review-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
 .review-name { font-size: 13px; font-weight: 700; color: var(--blue-800); }
 
+/* ══ COMENTÁRIOS ════════════════════════════════════════════ */
+.comments-wrap { max-width: 720px; margin: 0 auto; }
+.comment-form {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.75rem; margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.comment-form h3 { font-size: 15px; font-weight: 700; color: var(--blue-900); margin-bottom: 1.1rem; }
+.comment-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media(max-width:500px) { .comment-form-row { grid-template-columns: 1fr; } }
+.comment-form input, .comment-form textarea {
+  width: 100%; padding: 10px 13px; border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm); background: #fff;
+  font-family: inherit; font-size: 14px; color: var(--text);
+  outline: none; transition: border-color .18s, box-shadow .18s;
+}
+.comment-form input:focus, .comment-form textarea:focus {
+  border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(34,114,195,.1);
+}
+.comment-form textarea { height: 90px; resize: vertical; margin-bottom: 12px; }
+.comment-stars-input { display: flex; gap: 4px; margin-bottom: 12px; }
+.comment-stars-input span {
+  font-size: 22px; cursor: pointer; color: #d1d5db;
+  transition: color .15s, transform .15s;
+  line-height: 1;
+}
+.comment-stars-input span.active,
+.comment-stars-input span:hover { color: #f59e0b; transform: scale(1.15); }
+.comment-submit {
+  background: var(--blue-600); color: #fff; border: none;
+  padding: 11px 26px; border-radius: var(--radius-sm);
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background .18s, transform .15s;
+  box-shadow: 0 3px 14px rgba(24,95,165,.3);
+}
+.comment-submit:hover { background: var(--blue-700); transform: translateY(-1px); }
+.comment-submit:disabled { background: var(--subtle); box-shadow: none; cursor: not-allowed; transform: none; }
+.comment-success {
+  display: none; background: #f0faf4; color: #1a7d3f;
+  border: 1px solid #b8e8ca; border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 13px; font-weight: 600;
+  margin-top: 10px; text-align: center;
+}
+.comment-success.show { display: block; }
+.comment-error {
+  display: none; background: #fff5f5; color: #c0303f;
+  border: 1px solid #f5c0c6; border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 13px; font-weight: 600;
+  margin-top: 10px; text-align: center;
+}
+.comment-error.show { display: block; }
+.comments-list { display: flex; flex-direction: column; gap: 14px; }
+.comment-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.4rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  animation: fadeUp .4s ease both;
+}
+.comment-item-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; gap: 10px; flex-wrap: wrap;
+}
+.comment-author { font-size: 14px; font-weight: 700; color: var(--blue-900); }
+.comment-date { font-size: 11px; color: var(--subtle); }
+.comment-rating { color: #f59e0b; font-size: 13px; letter-spacing: 1px; }
+.comment-body { font-size: 14px; color: var(--muted); line-height: 1.75; font-style: italic; }
+.comments-empty {
+  text-align: center; padding: 2.5rem; color: var(--subtle);
+  font-size: 14px; border: 1.5px dashed var(--border2);
+  border-radius: var(--radius);
+}
+.comments-loading { text-align: center; padding: 2rem; color: var(--subtle); font-size: 14px; }
+.comment-pending-badge {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;
+  padding: 2px 8px; border-radius: 20px; letter-spacing: .03em;
+}
+/* Admin comments tab */
+.adm-comment-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px;
+}
+.adm-comment-info { flex: 1; min-width: 0; }
+.adm-comment-info strong { font-size: 13px; color: var(--blue-900); display: block; }
+.adm-comment-info span { font-size: 12px; color: var(--muted); }
+.adm-comment-info p { font-size: 12px; color: var(--text); margin-top: 4px; line-height: 1.5; }
+.adm-comment-actions { display: flex; gap: 6px; flex-shrink: 0; margin-top: 2px; }
+.adm-approve-btn {
+  background: #f0faf4; color: #1a7d3f; border: 1px solid #b8e8ca;
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.adm-approve-btn:hover { background: #d1f5e0; }
+.adm-del-comment-btn {
+  background: #fff5f5; color: var(--red-600); border: 1px solid #f5c0c6;
+  padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.adm-del-comment-btn:hover { background: #ffe0e3; }
+
 /* ══ SCHEDULE ════════════════════════════════════════════════ */
 .schedule-wrap {
   max-width: 780px; margin: 0 auto;
@@ -934,6 +1035,40 @@ body {
   </div>
 </section>
 
+<!-- COMENTÁRIOS -->
+<section class="section-white reveal" id="comentarios">
+  <div class="section-header">
+    <span class="section-kicker">Comunidade</span>
+    <h2 class="section-title">Deixe seu <em>Comentário</em></h2>
+    <p class="section-sub">Compartilhe sua experiência com a Renutech</p>
+  </div>
+  <div class="comments-wrap">
+    <!-- Formulário -->
+    <div class="comment-form">
+      <h3>✍️ Escreva seu comentário</h3>
+      <div class="comment-form-row">
+        <input type="text" id="cm-nome" placeholder="Seu nome *" maxlength="60">
+        <input type="text" id="cm-local" placeholder="Cidade / Empresa (opcional)" maxlength="80">
+      </div>
+      <div class="comment-stars-input" id="cmStarsInput" title="Clique para avaliar">
+        <span data-val="1">★</span>
+        <span data-val="2">★</span>
+        <span data-val="3">★</span>
+        <span data-val="4">★</span>
+        <span data-val="5">★</span>
+      </div>
+      <textarea id="cm-texto" placeholder="Conte sua experiência com nossos serviços... *" maxlength="600"></textarea>
+      <button class="comment-submit" id="cmSubmitBtn" onclick="submitComment()">💬 Publicar comentário</button>
+      <div class="comment-success" id="cmSuccess">✅ Comentário enviado! Será exibido após aprovação. Obrigado!</div>
+      <div class="comment-error" id="cmError">❌ Por favor, preencha o nome, a avaliação e o comentário.</div>
+    </div>
+    <!-- Lista de comentários -->
+    <div class="comments-list" id="commentsList">
+      <div class="comments-loading">Carregando comentários…</div>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer class="footer">
   <img src="https://gxevkmmhyhzgktsmzmkn.supabase.co/storage/v1/object/public/imagens/logo.png" alt="Renutech" style="height:50px;width:auto;opacity:.85;margin:0 auto 1rem;display:block">
@@ -979,6 +1114,7 @@ body {
           <button class="admin-tab" onclick="adminTab('cases',this)">🏆 Cases</button>
           <button class="admin-tab" onclick="adminTab('quemsomos',this)">🏢 Quem Somos</button>
           <button class="admin-tab" onclick="adminTab('logo',this)">🖼️ Logo</button>
+          <button class="admin-tab" onclick="adminTab('comentarios',this)">💬 Comentários</button>
           <button class="admin-tab" onclick="adminTab('senha',this)">🔒 Senha</button>
         </div>
         <div class="admin-section active" id="tab-agenda">
@@ -1070,6 +1206,11 @@ body {
           </div>
           <button class="admin-btn" onclick="adminSave('logo')" style="margin-top:1rem">💾 Salvar logo</button>
           <button class="admin-btn secondary" onclick="adminLogoRemove()" style="margin-top:8px">🗑️ Remover logo (voltar ao padrão)</button>
+        </div>
+        <div class="admin-section" id="tab-comentarios">
+          <div class="admin-section-title">Gerenciar Comentários</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Aprove ou exclua comentários enviados pelos visitantes. Apenas comentários aprovados ficam visíveis no site.</p>
+          <div id="admComentariosList"><p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Carregando…</p></div>
         </div>
         <div class="admin-section" id="tab-senha">
           <div class="admin-section-title">Alterar senha</div>
@@ -1568,6 +1709,7 @@ function adminTab(name,btn){
   document.querySelectorAll('.admin-tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  if (name === 'comentarios') adminLoadComentarios();
 }
 
 // ── Carregar formulários admin ────────────────────────────────
@@ -2157,6 +2299,195 @@ function updateContatoSection(d) {
   const end = document.getElementById('contato-endereco');
   if(tel && d.telefone) tel.textContent = d.telefone;
   if(end && d.endereco) end.textContent = d.endereco;
+}
+
+// ══ COMENTÁRIOS ══════════════════════════════════════════════
+const SUPA_COMMENTS_URL = BIN_URL_SUPA + '/rest/v1/comentarios';
+
+let _cmRating = 0;
+
+// Inicializa estrelas interativas
+(function initCommentStars() {
+  document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('#cmStarsInput span');
+    stars.forEach(function(star) {
+      star.addEventListener('mouseover', function() {
+        const val = parseInt(this.dataset.val);
+        stars.forEach(function(s) {
+          s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+        });
+      });
+      star.addEventListener('mouseleave', function() {
+        stars.forEach(function(s) {
+          s.classList.toggle('active', parseInt(s.dataset.val) <= _cmRating);
+        });
+      });
+      star.addEventListener('click', function() {
+        _cmRating = parseInt(this.dataset.val);
+        stars.forEach(function(s) {
+          s.classList.toggle('active', parseInt(s.dataset.val) <= _cmRating);
+        });
+      });
+    });
+    loadComments();
+  });
+})();
+
+async function loadComments() {
+  const list = document.getElementById('commentsList');
+  if (!list) return;
+  try {
+    const r = await fetch(SUPA_COMMENTS_URL + '?aprovado=eq.true&order=created_at.desc&limit=30', {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) throw new Error('read ' + r.status);
+    const rows = await r.json();
+    if (!rows || rows.length === 0) {
+      list.innerHTML = '<div class="comments-empty">💬 Nenhum comentário ainda. Seja o primeiro a comentar!</div>';
+      return;
+    }
+    list.innerHTML = rows.map(function(c) {
+      const stars = '★'.repeat(Math.min(5, Math.max(1, c.nota || 5))) +
+                    '☆'.repeat(5 - Math.min(5, Math.max(1, c.nota || 5)));
+      const date = new Date(c.created_at).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'});
+      const local = c.local ? ' · ' + escHtml(c.local) : '';
+      return '<div class="comment-item">' +
+        '<div class="comment-item-header">' +
+          '<div>' +
+            '<div class="comment-author">' + escHtml(c.nome) + '<span style="font-weight:400;color:var(--subtle);font-size:12px">' + local + '</span></div>' +
+            '<div class="comment-rating">' + stars + '</div>' +
+          '</div>' +
+          '<div class="comment-date">' + date + '</div>' +
+        '</div>' +
+        '<div class="comment-body">"' + escHtml(c.texto) + '"</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="comments-empty">Não foi possível carregar os comentários.</div>';
+  }
+}
+
+async function submitComment() {
+  const nome  = document.getElementById('cm-nome').value.trim();
+  const local = document.getElementById('cm-local').value.trim();
+  const texto = document.getElementById('cm-texto').value.trim();
+  const success = document.getElementById('cmSuccess');
+  const error   = document.getElementById('cmError');
+  const btn     = document.getElementById('cmSubmitBtn');
+  success.classList.remove('show');
+  error.classList.remove('show');
+  if (!nome || !texto || !_cmRating) {
+    error.classList.add('show');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '⏳ Enviando…';
+  try {
+    const r = await fetch(SUPA_COMMENTS_URL, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY_STORAGE,
+        'Authorization': 'Bearer ' + SUPA_KEY_STORAGE,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ nome: nome, local: local, texto: texto, nota: _cmRating, aprovado: false })
+    });
+    if (!r.ok) throw new Error('post ' + r.status);
+    document.getElementById('cm-nome').value = '';
+    document.getElementById('cm-local').value = '';
+    document.getElementById('cm-texto').value = '';
+    _cmRating = 0;
+    document.querySelectorAll('#cmStarsInput span').forEach(function(s){ s.classList.remove('active'); });
+    success.classList.add('show');
+    setTimeout(function(){ success.classList.remove('show'); }, 5000);
+  } catch(e) {
+    error.textContent = '❌ Erro ao enviar. Tente novamente em instantes.';
+    error.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💬 Publicar comentário';
+  }
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Admin: carrega comentários pendentes e aprovados
+async function adminLoadComentarios() {
+  const el = document.getElementById('admComentariosList');
+  if (!el) return;
+  el.innerHTML = '<p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Carregando…</p>';
+  try {
+    const r = await fetch(SUPA_COMMENTS_URL + '?order=created_at.desc&limit=60', {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) throw new Error('admin read ' + r.status);
+    const rows = await r.json();
+    if (!rows || rows.length === 0) {
+      el.innerHTML = '<p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Nenhum comentário cadastrado ainda.</p>';
+      return;
+    }
+    el.innerHTML = rows.map(function(c) {
+      const stars = '★'.repeat(Math.min(5, c.nota||5));
+      const date  = new Date(c.created_at).toLocaleDateString('pt-BR');
+      const badge = c.aprovado
+        ? '<span style="display:inline-block;font-size:10px;font-weight:700;background:#f0faf4;color:#1a7d3f;border:1px solid #b8e8ca;padding:2px 8px;border-radius:20px">✅ Aprovado</span>'
+        : '<span class="comment-pending-badge">⏳ Pendente</span>';
+      const approveBtn = c.aprovado ? '' :
+        '<button class="adm-approve-btn" onclick="adminApproveComment('+c.id+',this)">✔ Aprovar</button>';
+      return '<div class="adm-comment-item" id="adm-cm-'+c.id+'">' +
+        '<div class="adm-comment-info">' +
+          '<strong>' + escHtml(c.nome) + (c.local ? ' · <span style="font-weight:400">'+escHtml(c.local)+'</span>' : '') + ' ' + badge + '</strong>' +
+          '<span>' + stars + ' · ' + date + '</span>' +
+          '<p>"' + escHtml(c.texto) + '"</p>' +
+        '</div>' +
+        '<div class="adm-comment-actions">' + approveBtn +
+          '<button class="adm-del-comment-btn" onclick="adminDeleteComment('+c.id+',this)">✕</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<p style="color:var(--red-600);font-size:13px;text-align:center;padding:1rem">Erro ao carregar. Verifique se a tabela <code>comentarios</code> existe no Supabase.</p>';
+  }
+}
+
+async function adminApproveComment(id, btn) {
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const r = await fetch(SUPA_COMMENTS_URL + '?id=eq.' + id, {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ aprovado: true })
+    });
+    if (!r.ok) throw new Error('patch');
+    const row = document.getElementById('adm-cm-' + id);
+    if (row) {
+      const badge = row.querySelector('.comment-pending-badge');
+      if (badge) badge.outerHTML = '<span style="display:inline-block;font-size:10px;font-weight:700;background:#f0faf4;color:#1a7d3f;border:1px solid #b8e8ca;padding:2px 8px;border-radius:20px">✅ Aprovado</span>';
+      btn.remove();
+    }
+    loadComments();
+  } catch(e) { btn.disabled = false; btn.textContent = '✔ Aprovar'; alert('Erro ao aprovar.'); }
+}
+
+async function adminDeleteComment(id, btn) {
+  if (!confirm('Excluir este comentário?')) return;
+  btn.disabled = true;
+  try {
+    const r = await fetch(SUPA_COMMENTS_URL + '?id=eq.' + id, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) throw new Error('delete');
+    const row = document.getElementById('adm-cm-' + id);
+    if (row) row.remove();
+    loadComments();
+  } catch(e) { btn.disabled = false; alert('Erro ao excluir.'); }
 }
 
 // ── Iniciar ───────────────────────────────────────────────────
