@@ -1261,8 +1261,8 @@ function initActiveNav() {
 // ══════════════════════════════════════════════════════════════
 // CONFIGURAÇÃO
 // ══════════════════════════════════════════════════════════════
-const ADMIN_PWD_KEY = 'brn_admin_pwd';
-const DEFAULT_PWD   = 'brn2024';
+const SUPA_CONFIG_URL = BIN_URL_SUPA + '/rest/v1/site_config';
+// Sem senha em código — armazenada como hash SHA-256 no Supabase
 const DIAS_NOMES = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
 // ── Supabase ──────────────────────────────────────────────────
 const BIN_URL_SUPA    = 'https://gxevkmmhyhzgktsmzmkn.supabase.co';
@@ -1683,7 +1683,31 @@ document.getElementById('f-tel').addEventListener('input',function(){
 });
 
 // ══ ADMIN ══════════════════════════════════════════════════════
-function adminGetPwd(){ return localStorage.getItem(ADMIN_PWD_KEY)||DEFAULT_PWD; }
+// ── Senha via SHA-256 no Supabase ────────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function adminGetHashRemoto() {
+  try {
+    const r = await fetch(SUPA_DB_URL + '?id=eq.1&select=admin_pwd_hash', {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    const rows = await r.json();
+    return (rows && rows[0] && rows[0].admin_pwd_hash) || null;
+  } catch(e) { return null; }
+}
+
+async function adminSaveHashRemoto(hash) {
+  const r = await fetch(SUPA_DB_URL + '?id=eq.1', {
+    method: 'PATCH',
+    headers: { ...SUPA_HEADERS },
+    body: JSON.stringify({ admin_pwd_hash: hash, updated_at: new Date().toISOString() })
+  });
+  if (!r.ok) throw new Error('patch hash ' + r.status);
+}
+
 function adminOpen(){
   document.getElementById('adminOverlay').classList.add('open');
   document.getElementById('adminLogin').style.display='block';
@@ -1697,12 +1721,44 @@ function adminLogout(){
   document.getElementById('adminDash').style.display='none';
   document.getElementById('adminLogin').style.display='block';
 }
-function adminDoLogin(){
-  if(document.getElementById('adminPwd').value===adminGetPwd()){
-    document.getElementById('adminLogin').style.display='none';
-    document.getElementById('adminDash').style.display='block';
-    adminLoadAll();
-  } else { document.getElementById('loginErr').classList.add('show'); }
+
+async function adminDoLogin(){
+  const btn = document.querySelector('#adminLogin .admin-btn');
+  const pwd = document.getElementById('adminPwd').value;
+  const err = document.getElementById('loginErr');
+  err.classList.remove('show');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Verificando…'; }
+  try {
+    const [inputHash, savedHash] = await Promise.all([
+      sha256(pwd),
+      adminGetHashRemoto()
+    ]);
+    // Se ainda não há hash no banco (primeira vez), aceita a senha padrão e salva o hash
+    const DEFAULT_HASH_PLAIN = 'brn2024';
+    let ok = false;
+    if (!savedHash) {
+      // Primeira vez: compara com padrão e já migra para hash
+      if (pwd === DEFAULT_HASH_PLAIN) {
+        await adminSaveHashRemoto(inputHash);
+        ok = true;
+      }
+    } else {
+      ok = (inputHash === savedHash);
+    }
+    if (ok) {
+      document.getElementById('adminLogin').style.display='none';
+      document.getElementById('adminDash').style.display='block';
+      adminLoadAll();
+    } else {
+      err.textContent = 'Senha incorreta.';
+      err.classList.add('show');
+    }
+  } catch(e) {
+    err.textContent = 'Erro de conexão. Tente novamente.';
+    err.classList.add('show');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Entrar'; }
+  }
 }
 function adminTab(name,btn){
   document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
@@ -2277,19 +2333,31 @@ function applyLogo(src) {
 }
 
 
-function adminSaveSenha(){
-  const atual=document.getElementById('adm-pwd-atual').value;
-  const nova=document.getElementById('adm-pwd-nova').value;
-  const conf=document.getElementById('adm-pwd-conf').value;
-  const err=document.getElementById('pwdErr');
-  if(atual!==adminGetPwd()){ err.textContent='Senha atual incorreta.'; err.classList.add('show'); return; }
-  if(nova.length<6){ err.textContent='Mínimo 6 caracteres.'; err.classList.add('show'); return; }
-  if(nova!==conf){ err.textContent='As senhas não coincidem.'; err.classList.add('show'); return; }
+async function adminSaveSenha(){
+  const atual = document.getElementById('adm-pwd-atual').value;
+  const nova  = document.getElementById('adm-pwd-nova').value;
+  const conf  = document.getElementById('adm-pwd-conf').value;
+  const err   = document.getElementById('pwdErr');
+  const btn   = document.querySelector('#tab-senha .admin-btn');
   err.classList.remove('show');
-  localStorage.setItem(ADMIN_PWD_KEY,nova);
-  ['adm-pwd-atual','adm-pwd-nova','adm-pwd-conf'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('saveBanner').classList.add('show');
-  setTimeout(()=>document.getElementById('saveBanner').classList.remove('show'),3000);
+  if (nova.length < 6) { err.textContent='Mínimo 6 caracteres.'; err.classList.add('show'); return; }
+  if (nova !== conf)   { err.textContent='As senhas não coincidem.'; err.classList.add('show'); return; }
+  if (btn) { btn.disabled=true; btn.textContent='⏳ Salvando…'; }
+  try {
+    const [atualHash, savedHash] = await Promise.all([sha256(atual), adminGetHashRemoto()]);
+    // Verifica senha atual (aceita padrão 'brn2024' se ainda não há hash)
+    const atualOk = savedHash ? (atualHash === savedHash) : (atual === 'brn2024');
+    if (!atualOk) { err.textContent='Senha atual incorreta.'; err.classList.add('show'); return; }
+    const novoHash = await sha256(nova);
+    await adminSaveHashRemoto(novoHash);
+    ['adm-pwd-atual','adm-pwd-nova','adm-pwd-conf'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('saveBanner').classList.add('show');
+    setTimeout(()=>document.getElementById('saveBanner').classList.remove('show'),3000);
+  } catch(e) {
+    err.textContent='Erro ao salvar. Tente novamente.'; err.classList.add('show');
+  } finally {
+    if (btn) { btn.disabled=false; btn.textContent='🔒 Alterar senha'; }
+  }
 }
 
 
