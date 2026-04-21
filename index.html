@@ -2,7 +2,7 @@
 <!-- Renutech Soluções em Tecnologia -->
 <html lang="pt-BR">
 <head>
-<!-- Google tag (gtag.js) — GA4 estatico, carrega antes do Supabase -->
+<!-- Google tag (gtag.js) — GA4 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HNJ4E8CHHD"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -10,11 +10,39 @@
   gtag('js', new Date());
   gtag('config', 'G-HNJ4E8CHHD');
   window._ga4StaticLoaded = true;
+  // Google Ads — adicionar conversion label quando disponível
+  // gtag('config', 'AW-2775895352');
+  // window._gadsConversionTag = function(){ gtag('event','conversion',{'send_to':'AW-2775895352/SEU_LABEL_AQUI','value':1.0,'currency':'BRL'}); };
 </script>
+<!-- Meta Pixel -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+  (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '812927449367680');
+  fbq('track', 'PageView');
+  window._metaEventoConv = 'Contact';
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=812927449367680&ev=PageView&noscript=1"/></noscript>
 <meta charset="UTF-8">
 <meta name="description" content="Renutech Soluções em Tecnologia — Especialistas em CFTV, alarme, cerca elétrica, instalação elétrica e cabeamento estruturado em São Paulo.">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="Renutech Soluções em Tecnologia">
+<meta property="og:description" content="Especialistas em CFTV, alarme, cerca elétrica, instalação elétrica e cabeamento estruturado em São Paulo. Agende sua vistoria online!">
+<meta property="og:image" content="https://gxevkmmhyhzgktsmzmkn.supabase.co/storage/v1/object/public/imagens/hero-bg.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://renutech.com.br">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Renutech Soluções em Tecnologia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Renutech Soluções em Tecnologia">
+<meta name="twitter:description" content="Especialistas em CFTV, alarme, cerca elétrica e instalação elétrica em São Paulo. Agende online!">
+<meta name="twitter:image" content="https://gxevkmmhyhzgktsmzmkn.supabase.co/storage/v1/object/public/imagens/hero-bg.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Renutech Soluções em Tecnologia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -506,6 +534,19 @@ body {
 }
 .slot:hover { border-color: var(--blue-500); color: var(--blue-700); background: var(--blue-50); }
 .slot.selected { border-color: var(--blue-600); color: var(--blue-800); background: var(--blue-50); font-weight: 700; }
+.slot.booked { background: #f5f5f5; color: #bbb; border-color: #e0e0e0; cursor: not-allowed; text-decoration: line-through; pointer-events: none; }
+/* ── Agendamentos admin ── */
+.age-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 12px; }
+.age-card-info { flex: 1; min-width: 0; }
+.age-card-info strong { font-size: 13px; color: var(--blue-900); display: block; margin-bottom: 2px; }
+.age-card-info span { font-size: 11px; color: var(--muted); display: block; line-height: 1.6; }
+.age-card-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; align-items: flex-end; }
+.age-status { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 20px; letter-spacing: .03em; }
+.age-status.aberto { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.age-status.concluido { background: #f0faf4; color: #1a7d3f; border: 1px solid #b8e8ca; }
+.age-finish-btn { background: #f0faf4; color: #1a7d3f; border: 1px solid #b8e8ca; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
+.age-finish-btn:hover { background: #d1f5e0; }
+.age-del-btn { background: #fff5f5; color: var(--red-600); border: 1px solid #f5c0c6; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
 
 .info-box {
   background: var(--blue-50); border-left: 3px solid var(--blue-600);
@@ -1026,7 +1067,7 @@ body {
     </div>
     <div class="info-row">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span>Seg–Sex 8h–18h · Sáb 8h–12h</span>
+      <span id="contato-horario">Seg–Sex 8h–18h · Sáb 8h–12h</span>
     </div>
     <a href="#agendamento" class="btn-primary">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1081,6 +1122,17 @@ body {
   <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
+<!-- CONFIRMAÇÃO DE AGENDAMENTO -->
+<div id="ageConfirmOverlay" style="display:none;position:fixed;inset:0;background:rgba(7,29,54,.7);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:#fff;border-radius:20px;padding:2.5rem 2rem;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(7,29,54,.25);animation:slideUp .3s ease">
+    <div style="font-size:56px;margin-bottom:1rem">✅</div>
+    <h2 style="font-size:22px;font-weight:800;color:var(--blue-900);margin-bottom:.5rem">Agendamento registrado!</h2>
+    <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:.5rem">Seus dados foram salvos. O WhatsApp foi aberto para confirmar com nossa equipe.</p>
+    <div id="ageConfirmResumo" style="background:var(--blue-50);border:1px solid var(--blue-100);border-radius:10px;padding:14px 16px;margin:1.25rem 0;text-align:left;font-size:13px;color:var(--blue-900);line-height:1.9"></div>
+    <button onclick="document.getElementById('ageConfirmOverlay').style.display='none'" style="background:var(--blue-600);color:#fff;border:none;padding:12px 32px;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;width:100%" onmouseover="this.style.background='var(--blue-700)'" onmouseout="this.style.background='var(--blue-600)'">Fechar</button>
+  </div>
+</div>
+
 <!-- ADMIN FAB -->
 <div class="admin-fab" onclick="adminOpen()" title="Admin">
   <svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"/></svg>
@@ -1115,6 +1167,7 @@ body {
           <button class="admin-tab" onclick="adminTab('quemsomos',this)">🏢 Quem Somos</button>
           <button class="admin-tab" onclick="adminTab('logo',this)">🖼️ Logo</button>
           <button class="admin-tab" onclick="adminTab('comentarios',this)">💬 Comentários</button>
+          <button class="admin-tab" onclick="adminTab('agendamentos',this)">📋 Agendamentos <span id="age-badge" style="display:none;background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px;margin-left:3px;vertical-align:middle"></span></button>
           <button class="admin-tab" onclick="adminTab('senha',this)">🔒 Senha</button>
         </div>
         <div class="admin-section active" id="tab-agenda">
@@ -1156,6 +1209,7 @@ body {
           <div class="admin-field"><label>WhatsApp (com DDI+DDD sem espaços)</label><input type="text" id="adm-whatsapp" placeholder="5511944658849"></div>
           <div class="admin-field"><label>Endereço</label><input type="text" id="adm-endereco"></div>
           <div class="admin-field"><label>Telefone exibido no rodapé</label><input type="text" id="adm-telefone"></div>
+          <div class="admin-field"><label>Horário de atendimento (exibido na seção Contato)</label><input type="text" id="adm-horario-atend" placeholder="Seg–Sex 8h–18h · Sáb 8h–12h"></div>
           <button class="admin-btn" onclick="adminSave('contato')">💾 Salvar contato</button>
         </div>
         <div class="admin-section" id="tab-cases">
@@ -1212,6 +1266,17 @@ body {
           <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Aprove ou exclua comentários enviados pelos visitantes. Apenas comentários aprovados ficam visíveis no site.</p>
           <div id="admComentariosList"><p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Carregando…</p></div>
         </div>
+        <div class="admin-section" id="tab-agendamentos">
+          <div class="admin-section-title">📋 Agendamentos</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:1rem">Todos os agendamentos enviados pelos clientes. Marque como concluído após realizar a visita.</p>
+          <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">
+            <button class="admin-btn sm secondary" onclick="ageFilter('todos')" id="age-f-todos" style="border-color:var(--blue-600);color:var(--blue-700)">Todos</button>
+            <button class="admin-btn sm secondary" onclick="ageFilter('aberto')" id="age-f-aberto">⏳ Abertos</button>
+            <button class="admin-btn sm secondary" onclick="ageFilter('concluido')" id="age-f-concluido">✅ Concluídos</button>
+          </div>
+          <input type="text" id="age-busca" placeholder="🔍 Buscar por nome, serviço ou data (ex: 22/04)..." oninput="ageBuscar()" style="width:100%;padding:9px 13px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-family:inherit;font-size:13px;color:var(--text);outline:none;margin-bottom:1rem;transition:border-color .18s" onfocus="this.style.borderColor='var(--blue-500)'" onblur="this.style.borderColor='var(--border2)'">
+          <div id="admAgendamentosList"><p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Carregando…</p></div>
+        </div>
         <div class="admin-section" id="tab-senha">
           <div class="admin-section-title">Alterar senha</div>
           <div class="admin-field"><label>Senha atual</label><input type="password" id="adm-pwd-atual"></div>
@@ -1267,12 +1332,16 @@ const DIAS_NOMES = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sáb
 const BIN_URL_SUPA    = 'https://gxevkmmhyhzgktsmzmkn.supabase.co';
 const SUPA_KEY_STORAGE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4ZXZrbW1oeWh6Z2t0c216bWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzODA1OTUsImV4cCI6MjA5MTk1NjU5NX0.iggwIOzgVv4jJ7mI8qbCmG848acY5y4sfO205pfNHKI';
 const SUPA_DB_URL  = BIN_URL_SUPA + '/rest/v1/site_config';
+const SUPA_AGE_URL = BIN_URL_SUPA + '/rest/v1/agendamentos';
 const SUPA_HEADERS = {
   'apikey': SUPA_KEY_STORAGE,
   'Authorization': 'Bearer ' + SUPA_KEY_STORAGE,
   'Content-Type': 'application/json',
   'Prefer': 'return=minimal'
 };
+
+// Horários já ocupados (carregados do Supabase): { "2025-08-15": ["09:00","14:00"], ... }
+let horariosOcupados = {};
 
 // ── Dados padrão ──────────────────────────────────────────────
 const DEFAULT_DATA = {
@@ -1388,6 +1457,8 @@ function initSite() {
     siteData = DEFAULT_DATA;
   }).finally(function() {
     try { applyData(); } catch(e) { console.error('applyData error', e); }
+    // Carrega horários ocupados para bloquear no calendário
+    carregarHorariosOcupados().catch(function(){});
     try { if(typeof updateContatoSection === "function") updateContatoSection(siteData); } catch(e) {}
     // Apply saved logo to loading screen BEFORE hiding it
     try {
@@ -1466,45 +1537,10 @@ function applyData() {
   renderCalendario();
 }
 
-// Injeta as tags de tracking dinamicamente com base nos dados do Supabase
+// Tracking já carregado estaticamente no <head> (GA4 + Meta Pixel)
+// Google Ads será ativado aqui quando o Conversion Label estiver disponível
 function injectTracking(t) {
-  if (window._trackingInjected) return;
-  window._trackingInjected = true;
-
-  // GA4 — so injeta dinamicamente se nao foi carregado estaticamente
-  if (t.ga4_ativo && t.ga4_id && !window._ga4StaticLoaded) {
-    var s1 = document.createElement('script');
-    s1.async = true;
-    s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + t.ga4_id;
-    document.head.appendChild(s1);
-    var s2 = document.createElement('script');
-    s2.text = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' + t.ga4_id + '");';
-    document.head.appendChild(s2);
-  }
-
-  // Meta Pixel
-  if (t.meta_ativo && t.meta_pixel_id) {
-    var sp = document.createElement('script');
-    sp.text = '!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","' + t.meta_pixel_id + '");fbq("track","PageView");';
-    document.head.appendChild(sp);
-    var ns = document.createElement('noscript');
-    ns.innerHTML = '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=' + t.meta_pixel_id + '&ev=PageView&noscript=1"/>';
-    document.head.appendChild(ns);
-    window._metaEventoConv = t.meta_evento || 'Contact';
-  }
-
-  // Google Ads
-  if (t.gads_ativo && t.gads_id) {
-    var gadsId = t.gads_id.replace(/^AW-/i,'');
-    var sg1 = document.createElement('script');
-    sg1.async = true;
-    sg1.src = 'https://www.googletagmanager.com/gtag/js?id=AW-' + gadsId;
-    document.head.appendChild(sg1);
-    var sg2 = document.createElement('script');
-    var label = t.gads_label ? '"send_to":"AW-' + gadsId + '/' + t.gads_label + '",' : '';
-    sg2.text = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","AW-' + gadsId + '");window._gadsConversionTag=function(){gtag("event","conversion",{' + label + '"value":1.0,"currency":"BRL"});};';
-    document.head.appendChild(sg2);
-  }
+  // Mantido para compatibilidade — não faz mais nada pois tudo está hardcoded
 }
 
 // ══ Renderizadores públicos ════════════════════════════════════
@@ -1621,6 +1657,23 @@ function renderCalendario() {
     grid.appendChild(el);
   }
 }
+
+// Carrega horários ocupados do Supabase (agendamentos com status != cancelado)
+async function carregarHorariosOcupados() {
+  try {
+    const r = await fetch(SUPA_AGE_URL + '?select=data_iso,horario&status=neq.cancelado', {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) return;
+    const rows = await r.json();
+    horariosOcupados = {};
+    (rows || []).forEach(function(a) {
+      if (!a.data_iso || !a.horario) return;
+      if (!horariosOcupados[a.data_iso]) horariosOcupados[a.data_iso] = [];
+      horariosOcupados[a.data_iso].push(a.horario);
+    });
+  } catch(e) { console.warn('Erro ao carregar horários ocupados:', e); }
+}
 function selecionarDia(data,el){
   document.querySelectorAll('.cal-day.selected').forEach(d=>d.classList.remove('selected'));
   el.classList.add('selected'); diaSelecionado=data; horarioSelecionado=null;
@@ -1633,20 +1686,36 @@ function renderHorarios(ds){
   label.style.display='block';
   label.textContent='Horários — '+diaSelecionado.toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
   container.innerHTML='';
+  // Calcula a chave de data ISO local (yyyy-mm-dd)
+  const dataKey = diaSelecionado.getFullYear()+'-'
+    +String(diaSelecionado.getMonth()+1).padStart(2,'0')+'-'
+    +String(diaSelecionado.getDate()).padStart(2,'0');
+  const ocupados = horariosOcupados[dataKey] || [];
   horarios.forEach(h=>{
     const slot=document.createElement('div'); slot.className='slot'; slot.textContent=h;
-    slot.addEventListener('click',()=>{
-      document.querySelectorAll('.slot.selected').forEach(s=>s.classList.remove('selected'));
-      slot.classList.add('selected'); horarioSelecionado=h;
-    });
+    if(ocupados.includes(h)){
+      slot.classList.add('booked');
+      slot.title='Horário já agendado';
+    } else {
+      slot.addEventListener('click',()=>{
+        document.querySelectorAll('.slot.selected').forEach(s=>s.classList.remove('selected'));
+        slot.classList.add('selected'); horarioSelecionado=h;
+      });
+    }
     container.appendChild(slot);
   });
 }
-document.getElementById('cal-prev').addEventListener('click',()=>{ mesAtual--; if(mesAtual<0){mesAtual=11;anoAtual--;} renderCalendario(); });
-document.getElementById('cal-next').addEventListener('click',()=>{ mesAtual++; if(mesAtual>11){mesAtual=0;anoAtual++;} renderCalendario(); });
+document.getElementById('cal-prev').addEventListener('click',()=>{
+  mesAtual--; if(mesAtual<0){mesAtual=11;anoAtual--;}
+  carregarHorariosOcupados().then(()=>renderCalendario()).catch(()=>renderCalendario());
+});
+document.getElementById('cal-next').addEventListener('click',()=>{
+  mesAtual++; if(mesAtual>11){mesAtual=0;anoAtual++;}
+  carregarHorariosOcupados().then(()=>renderCalendario()).catch(()=>renderCalendario());
+});
 
 // ── WhatsApp ──────────────────────────────────────────────────
-function abrirWhatsApp(){
+async function abrirWhatsApp(){
   const nome=document.getElementById('f-nome').value.trim();
   const tel=document.getElementById('f-tel').value.trim();
   const email=document.getElementById('f-email').value.trim();
@@ -1658,13 +1727,48 @@ function abrirWhatsApp(){
   if(!nome||!tel||!imovel||!servico||!endereco){ msg.classList.add('show'); document.getElementById('f-nome').scrollIntoView({behavior:'smooth',block:'center'}); return; }
   msg.classList.remove('show');
   let dataHora='';
+  let dataISO = null, horarioStr = null;
   if(diaSelecionado&&horarioSelecionado){
     dataHora='\n📅 *Data preferida:* '+diaSelecionado.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' às '+horarioSelecionado;
+    dataISO = diaSelecionado.getFullYear()+'-'
+      +String(diaSelecionado.getMonth()+1).padStart(2,'0')+'-'
+      +String(diaSelecionado.getDate()).padStart(2,'0');
+    horarioStr = horarioSelecionado;
   } else if(diaSelecionado){
     dataHora='\n📅 *Data preferida:* '+diaSelecionado.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})+' (horário a confirmar)';
+    dataISO = diaSelecionado.getFullYear()+'-'
+      +String(diaSelecionado.getMonth()+1).padStart(2,'0')+'-'
+      +String(diaSelecionado.getDate()).padStart(2,'0');
   }
   const wpp = (siteData.whatsapp || DEFAULT_DATA.whatsapp);
   const mensagem=`Ol\u00e1, Renutech!\n\nAcabo de realizar um agendamento de vistoria t\u00e9cnica pelo site e gostaria de confirmar o recebimento por aqui.\n\n*Nome:* ${nome}\n*Telefone:* ${tel}${email?'\n*E-mail:* '+email:''}\n*Tipo de im\u00f3vel:* ${imovel}${dataHora}\n*Servi\u00e7o:* ${servico}\n*Endere\u00e7o:* ${endereco}${obs?'\n\n*Observa\u00e7\u00f5es:* '+obs:''}\n\nPor favor, me avisem se houver algum imprevisto. Desde j\u00e1, agrade\u00e7o!`;
+
+  // Salva agendamento no Supabase
+  if (dataISO) {
+    try {
+      await fetch(SUPA_AGE_URL, {
+        method: 'POST',
+        headers: { ...SUPA_HEADERS, 'Prefer': 'return=minimal' },
+        body: JSON.stringify({
+          nome, telefone: tel, email: email||null,
+          tipo_imovel: imovel, servico, endereco,
+          observacoes: obs||null,
+          data_iso: dataISO,
+          horario: horarioStr||null,
+          status: 'aberto',
+          created_at: new Date().toISOString()
+        })
+      });
+      // Marca horário como ocupado localmente
+      if (horarioStr) {
+        if (!horariosOcupados[dataISO]) horariosOcupados[dataISO] = [];
+        if (!horariosOcupados[dataISO].includes(horarioStr)) horariosOcupados[dataISO].push(horarioStr);
+        // Re-renderiza horários para bloquear visualmente
+        renderHorarios(diaSelecionado.getDay());
+      }
+    } catch(e) { console.warn('Erro ao salvar agendamento:', e); }
+
+  }
 
   // Dispara eventos de conversão
   try { if(typeof fbq==='function') fbq('track', window._metaEventoConv||'Contact'); } catch(e){}
@@ -1672,6 +1776,23 @@ function abrirWhatsApp(){
   try { if(typeof window._gadsConversionTag==='function') window._gadsConversionTag(); } catch(e){}
 
   window.open('https://wa.me/'+wpp+'?text='+encodeURIComponent(mensagem),'_blank');
+
+  // Mostra tela de confirmação
+  const resumo = document.getElementById('ageConfirmResumo');
+  if (resumo) {
+    const dataFmtConf = diaSelecionado
+      ? diaSelecionado.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})
+      : null;
+    resumo.innerHTML =
+      `<b>👤 Nome:</b> ${escHtml(nome)}<br>`+
+      `<b>📱 Telefone:</b> ${escHtml(tel)}<br>`+
+      (email?`<b>✉️ E-mail:</b> ${escHtml(email)}<br>`:'')+
+      `<b>🔧 Serviço:</b> ${escHtml(servico)}<br>`+
+      (dataFmtConf?`<b>📅 Data:</b> ${escHtml(dataFmtConf)}${horarioStr?' às '+escHtml(horarioStr):' (horário a confirmar)'}<br>`:'')+
+      `<b>📍 Endereço:</b> ${escHtml(endereco)}`;
+  }
+  const overlay = document.getElementById('ageConfirmOverlay');
+  if (overlay) { overlay.style.display='flex'; }
 }
 document.getElementById('f-tel').addEventListener('input',function(){
   let v=this.value.replace(/\D/g,'').slice(0,11);
@@ -1748,6 +1869,13 @@ async function adminDoLogin(){
       document.getElementById('adminLogin').style.display='none';
       document.getElementById('adminDash').style.display='block';
       adminLoadAll();
+      // Carrega badge de agendamentos abertos ao logar
+      fetch(SUPA_AGE_URL + '?status=eq.aberto&select=id', {
+        headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+      }).then(rb => rb.json()).then(ab => {
+        const badge = document.getElementById('age-badge');
+        if (badge) { const c=(ab||[]).length; badge.textContent=c; badge.style.display=c>0?'inline':'none'; }
+      }).catch(()=>{});
     } else {
       err.textContent = 'Senha incorreta.';
       err.classList.add('show');
@@ -1765,6 +1893,7 @@ function adminTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
   if (name === 'comentarios') adminLoadComentarios();
+  if (name === 'agendamentos') adminLoadAgendamentos();
 }
 
 // ── Carregar formulários admin ────────────────────────────────
@@ -1810,6 +1939,7 @@ function adminLoadAll(){
   document.getElementById('adm-whatsapp').value=d.whatsapp||DEFAULT_DATA.whatsapp;
   document.getElementById('adm-endereco').value=d.endereco||DEFAULT_DATA.endereco;
   document.getElementById('adm-telefone').value=d.telefone||DEFAULT_DATA.telefone;
+  document.getElementById('adm-horario-atend').value=d.horario_atendimento||'Seg–Sex 8h–18h · Sáb 8h–12h';
   // Cases
   const cases=d.cases||DEFAULT_DATA.cases;
   const cl=document.getElementById('casesList'); cl.innerHTML='';
@@ -2035,7 +2165,7 @@ async function adminUploadPhotos(input){
   const btn=document.querySelector('#tab-fotos .admin-btn');
   if(btn){ btn.disabled=true; btn.textContent='⏳ Enviando…'; }
   for(const file of files){
-    if(file.size>10*1024*1024){ alert(file.name+' excede 10MB'); continue; }
+    if(file.size>2*1024*1024){ alert(file.name+' excede 2MB'); continue; }
     try{
       const url = await supaStorageUpload(file,'galeria');
       siteData.fotos.push({src:url,caption:''});
@@ -2143,6 +2273,7 @@ function adminSave(section){
     d.whatsapp=document.getElementById('adm-whatsapp').value.trim();
     d.endereco=document.getElementById('adm-endereco').value.trim();
     d.telefone=document.getElementById('adm-telefone').value.trim();
+    d.horario_atendimento=document.getElementById('adm-horario-atend').value.trim();
     document.getElementById('wppFloat').href='https://wa.me/'+d.whatsapp+'?text=Ol%C3%A1!%20Vim%20pelo%20site.';
     document.getElementById('footerText').innerHTML='© 2026 Renutech Soluções em Tecnologia — CNPJ 33.023.241/0001-05<br>'+d.endereco+' — '+d.telefone+' — Todos os Direitos Reservados · Dtlabs';
     if(typeof updateContatoSection === "function") updateContatoSection(d);
@@ -2234,10 +2365,10 @@ function removeQsDif(i) {
   if (el) el.remove();
   document.querySelectorAll('#qsDifList .editable-row').forEach((row, idx) => {
     row.id = 'qdrow-' + idx;
-    row.querySelector('.emoji').id = 'qdi-' + idx;
-    const inputs = row.querySelectorAll('input[type=text]');
-    if (inputs[1]) inputs[1].id = 'qdt-' + idx;
-    if (inputs[2]) inputs[2].id = 'qds-' + idx;
+    const emoji  = row.querySelector('.emoji');      if (emoji)    emoji.id    = 'qdi-' + idx;
+    const inputs = row.querySelectorAll('input[type=text]:not(.emoji)');
+    if (inputs[0]) inputs[0].id = 'qdt-' + idx;
+    if (inputs[1]) inputs[1].id = 'qds-' + idx;
     row.querySelector('.del-btn').setAttribute('onclick', 'removeQsDif(' + idx + ')');
   });
 }
@@ -2364,8 +2495,140 @@ async function adminSaveSenha(){
 function updateContatoSection(d) {
   const tel = document.getElementById('contato-telefone');
   const end = document.getElementById('contato-endereco');
+  const hor = document.getElementById('contato-horario');
   if(tel && d.telefone) tel.textContent = d.telefone;
   if(end && d.endereco) end.textContent = d.endereco;
+  if(hor && d.horario_atendimento) hor.textContent = d.horario_atendimento;
+}
+
+// ══ AGENDAMENTOS ADM ═════════════════════════════════════════
+let _ageFiltro = 'todos';
+
+function ageFilter(f) {
+  _ageFiltro = f;
+  document.querySelectorAll('[id^="age-f-"]').forEach(b => {
+    b.style.borderColor = ''; b.style.color = '';
+  });
+  const active = document.getElementById('age-f-'+f);
+  if (active) { active.style.borderColor = 'var(--blue-600)'; active.style.color = 'var(--blue-700)'; }
+  adminLoadAgendamentos();
+}
+
+let _ageRows = []; // cache para busca client-side
+
+async function adminLoadAgendamentos() {
+  const el = document.getElementById('admAgendamentosList');
+  if (!el) return;
+  el.innerHTML = '<p style="color:var(--subtle);font-size:13px;text-align:center;padding:1rem">Carregando…</p>';
+  try {
+    let url = SUPA_AGE_URL + '?order=created_at.desc&limit=200';
+    if (_ageFiltro !== 'todos') url += '&status=eq.' + _ageFiltro;
+    const r = await fetch(url, {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) throw new Error('read ' + r.status);
+    const rows = await r.json();
+    _ageRows = rows || [];
+
+    // Atualiza badge de abertos (sempre busca o total real)
+    fetch(SUPA_AGE_URL + '?status=eq.aberto&select=id', {
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    }).then(rb => rb.json()).then(ab => {
+      const badge = document.getElementById('age-badge');
+      if (badge) {
+        const count = (ab||[]).length;
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline' : 'none';
+      }
+    }).catch(()=>{});
+
+    ageRenderRows(_ageRows);
+  } catch(e) {
+    el.innerHTML = `<p style="color:var(--red-600);font-size:13px;text-align:center;padding:1rem">Erro ao carregar. Verifique se a tabela <code>agendamentos</code> existe no Supabase.<br><small style="font-weight:400">SQL: CREATE TABLE agendamentos (id BIGSERIAL PRIMARY KEY, nome TEXT, telefone TEXT, email TEXT, tipo_imovel TEXT, servico TEXT, endereco TEXT, observacoes TEXT, data_iso TEXT, horario TEXT, status TEXT DEFAULT 'aberto', created_at TIMESTAMPTZ DEFAULT NOW());</small></p>`;
+  }
+}
+
+function ageBuscar() {
+  const q = (document.getElementById('age-busca')?.value || '').toLowerCase().trim();
+  if (!q) { ageRenderRows(_ageRows); return; }
+  const filtrado = _ageRows.filter(a => {
+    const dataFmt = a.data_iso ? new Date(a.data_iso+'T12:00:00').toLocaleDateString('pt-BR') : '';
+    return (a.nome||'').toLowerCase().includes(q)
+      || (a.servico||'').toLowerCase().includes(q)
+      || (a.telefone||'').toLowerCase().includes(q)
+      || (a.endereco||'').toLowerCase().includes(q)
+      || dataFmt.includes(q);
+  });
+  ageRenderRows(filtrado);
+}
+
+function ageRenderRows(rows) {
+  const el = document.getElementById('admAgendamentosList');
+  if (!el) return;
+  if (!rows || rows.length === 0) {
+    el.innerHTML = '<p style="color:var(--subtle);font-size:13px;text-align:center;padding:1.5rem">Nenhum agendamento encontrado.</p>';
+    return;
+  }
+  el.innerHTML = rows.map(function(a) {
+    const badge = a.status === 'concluido'
+      ? '<span class="age-status concluido">✅ Concluído</span>'
+      : '<span class="age-status aberto">⏳ Aberto</span>';
+    const dataFmt = a.data_iso
+      ? new Date(a.data_iso + 'T12:00:00').toLocaleDateString('pt-BR', {weekday:'short',day:'numeric',month:'short',year:'numeric'})
+      : '—';
+    const createdFmt = a.created_at
+      ? new Date(a.created_at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+      : '';
+    const finishBtn = a.status !== 'concluido'
+      ? `<button class="age-finish-btn" onclick="ageConcluir(${a.id},this)">✔ Concluir</button>` : '';
+    return `<div class="age-card" id="age-row-${a.id}">
+      <div class="age-card-info">
+        <strong>${escHtml(a.nome)} ${badge}</strong>
+        <span>📱 ${escHtml(a.telefone||'')}${a.email?' · '+escHtml(a.email):''}</span>
+        <span>📅 ${dataFmt}${a.horario?' às '+escHtml(a.horario):' (horário a confirmar)'}</span>
+        <span>🔧 ${escHtml(a.servico||'')} · ${escHtml(a.tipo_imovel||'')}</span>
+        <span>📍 ${escHtml(a.endereco||'')}</span>
+        ${a.observacoes?`<span>💬 ${escHtml(a.observacoes)}</span>`:''}
+        <span style="color:var(--subtle);font-size:10px">Enviado em ${createdFmt}</span>
+      </div>
+      <div class="age-card-actions">
+        ${finishBtn}
+        <button class="age-del-btn" onclick="ageExcluir(${a.id},this)">✕ Excluir</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function ageConcluir(id, btn) {
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const r = await fetch(SUPA_AGE_URL + '?id=eq.' + id, {
+      method: 'PATCH',
+      headers: { ...SUPA_HEADERS, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ status: 'concluido' })
+    });
+    if (!r.ok) throw new Error('patch');
+    const row = document.getElementById('age-row-' + id);
+    if (row) {
+      const badge = row.querySelector('.age-status');
+      if (badge) { badge.className = 'age-status concluido'; badge.textContent = '✅ Concluído'; }
+      btn.remove();
+    }
+  } catch(e) { btn.disabled = false; btn.textContent = '✔ Concluir'; alert('Erro ao atualizar.'); }
+}
+
+async function ageExcluir(id, btn) {
+  if (!confirm('Excluir este agendamento?')) return;
+  btn.disabled = true;
+  try {
+    const r = await fetch(SUPA_AGE_URL + '?id=eq.' + id, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY_STORAGE, 'Authorization': 'Bearer ' + SUPA_KEY_STORAGE }
+    });
+    if (!r.ok) throw new Error('delete');
+    const row = document.getElementById('age-row-' + id);
+    if (row) row.remove();
+  } catch(e) { btn.disabled = false; alert('Erro ao excluir.'); }
 }
 
 // ══ COMENTÁRIOS ══════════════════════════════════════════════
