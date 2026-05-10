@@ -1442,7 +1442,9 @@ function initSite() {
     function deepMerge(def, src) {
       const out = Object.assign({}, def);
       Object.keys(src).forEach(k => {
-        if (src[k] && typeof src[k] === 'object' && !Array.isArray(src[k]) && def[k] && typeof def[k] === 'object' && !Array.isArray(def[k])) {
+        if (Array.isArray(src[k])) {
+          out[k] = src[k]; // array vazio = admin removeu tudo — respeitar
+        } else if (src[k] && typeof src[k] === 'object' && def[k] && typeof def[k] === 'object' && !Array.isArray(def[k])) {
           out[k] = deepMerge(def[k], src[k]);
         } else {
           out[k] = src[k];
@@ -1535,6 +1537,7 @@ function applyData() {
   injectTracking(d.tracking || {});
 
   renderCalendario();
+  updateNavLinks();
 }
 
 // Tracking já carregado estaticamente no <head> (GA4 + Meta Pixel)
@@ -1570,7 +1573,7 @@ function renderGallery(fotos) {
   const sec = document.getElementById('galeria');
   const grid = document.getElementById('galleryGrid');
   grid.innerHTML = '';
-  if (!fotos || fotos.length === 0) { sec.style.display = 'none'; return; }
+  if (!fotos || fotos.length === 0) { sec.style.display = 'none'; updateNavLinks(); return; }
   sec.style.display = '';
   fotos.forEach((p,i) => {
     const item = document.createElement('div');
@@ -1586,7 +1589,7 @@ function renderReviews(list) {
   const sec = document.getElementById('depoimentos');
   const grid = document.getElementById('reviewsGrid');
   grid.innerHTML = '';
-  if (!list || list.length === 0) { sec.style.display = 'none'; return; }
+  if (!list || list.length === 0) { sec.style.display = 'none'; updateNavLinks(); return; }
   sec.style.display = '';
   function esc(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
   list.forEach(r => {
@@ -1599,8 +1602,11 @@ function renderReviews(list) {
 }
 
 function renderCases(list) {
+  const sec = document.getElementById('cases');
   const g = document.getElementById('casesGrid');
   g.innerHTML = '';
+  if (!list || list.length === 0) { sec.style.display = 'none'; updateNavLinks(); return; }
+  sec.style.display = '';
   list.forEach((c,i) => {
     const hasImg = c.img && c.img.length > 10;
     g.innerHTML += `<div class="case-card" ${hasImg?`style="padding:0;overflow:hidden;"`:''}>
@@ -1617,6 +1623,23 @@ function renderCases(list) {
         <p style="font-size:11px;color:rgba(255,255,255,.5);margin-top:4px">${c.desc}</p>
       </div>`}
     </div>`;
+  });
+}
+
+// ══ Nav dinâmico — oculta links de seções vazias ══════════════
+function updateNavLinks() {
+  const map = {
+    '#galeria': 'galeria',
+    '#cases': 'cases',
+    '#depoimentos': 'depoimentos'
+  };
+  document.querySelectorAll('.nav-links a').forEach(function(a) {
+    const secId = map[a.getAttribute('href')];
+    if (!secId) return; // links sem seção controlada ficam sempre visíveis
+    const sec = document.getElementById(secId);
+    if (sec) {
+      a.style.display = (sec.style.display === 'none') ? 'none' : '';
+    }
   });
 }
 
