@@ -1398,32 +1398,24 @@ let HORARIOS = {};
 
 // ══ Supabase Database ══════════════════════════════════════════
 async function binRead() {
-  // 1. Tenta Supabase Database
-  try {
-    const r = await fetch(SUPA_DB_URL + '?id=eq.1&select=data', {
-      headers: {
-        'apikey': SUPA_KEY_STORAGE,
-        'Authorization': 'Bearer ' + SUPA_KEY_STORAGE
-      }
-    });
-    if (!r.ok) throw new Error('read ' + r.status);
-    const rows = await r.json();
-    if (rows && rows.length > 0 && rows[0].data && Object.keys(rows[0].data).length > 0) {
-      return rows[0].data;
+  // Limpa qualquer cache antigo do localStorage para evitar dados desatualizados
+  try { localStorage.removeItem('brn_sitedata'); } catch(e) {}
+  // Fonte única de verdade: Supabase Database
+  const r = await fetch(SUPA_DB_URL + '?id=eq.1&select=data', {
+    headers: {
+      'apikey': SUPA_KEY_STORAGE,
+      'Authorization': 'Bearer ' + SUPA_KEY_STORAGE
     }
-  } catch(e) { console.warn('Supabase read error:', e); }
-  // 2. Fallback: localStorage
-  try {
-    const local = localStorage.getItem('brn_sitedata');
-    if (local) return JSON.parse(local);
-  } catch(e) {}
-  // 3. Último recurso: defaults
+  });
+  if (!r.ok) throw new Error('Supabase read error: ' + r.status);
+  const rows = await r.json();
+  if (rows && rows.length > 0 && rows[0].data && Object.keys(rows[0].data).length > 0) {
+    return rows[0].data;
+  }
   return null;
 }
 async function binWrite(data) {
-  // Salva no localStorage como cache local
-  try { localStorage.setItem('brn_sitedata', JSON.stringify(data)); } catch(e) {}
-  // Salva no Supabase Database (fonte principal)
+  // Fonte única de verdade: Supabase Database (sem localStorage)
   const r = await fetch(SUPA_DB_URL + '?id=eq.1', {
     method: 'PATCH',
     headers: SUPA_HEADERS,
